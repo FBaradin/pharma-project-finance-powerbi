@@ -1,8 +1,10 @@
 /// GMP batches and QA status. Release of a commercial batch transfers control and triggers point-in-time revenue.
 table FactBatch
+	lineageTag: 71966956-1e61-41fc-9189-b9c926a88c2b
 
 	column BatchID
 		dataType: string
+		lineageTag: 1d5a46fe-bce5-4663-aaa7-a18873b12a5c
 		summarizeBy: none
 		sourceColumn: BatchID
 
@@ -10,6 +12,7 @@ table FactBatch
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 159ba031-ddec-46fe-be16-106ad058e0f9
 		summarizeBy: none
 		sourceColumn: ProjectKey
 
@@ -17,34 +20,46 @@ table FactBatch
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 717c1576-e8cc-42c5-8c82-cd1e70cb4244
 		summarizeBy: none
 		sourceColumn: CustomerKey
 
 	column BatchType
 		dataType: string
+		lineageTag: 359a719d-289b-44a9-a422-868fedec8080
 		summarizeBy: none
 		sourceColumn: BatchType
 
 	column ManufactureStartDate
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: f93a52d6-3ce4-4308-b20f-e2fabfb77344
 		summarizeBy: none
 		sourceColumn: ManufactureStartDate
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column PlannedReleaseDate
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: 7b6ca3e7-c4b1-4af7-8b65-83b5030d5c89
 		summarizeBy: none
 		sourceColumn: PlannedReleaseDate
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column ReleaseDate
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: a288435b-1ade-4109-a79c-28008b564734
 		summarizeBy: none
 		sourceColumn: ReleaseDate
 
+		annotation UnderlyingDateTimeDataType = Date
+
 	column BatchStatus
 		dataType: string
+		lineageTag: 9ed2d0e6-3da2-48d2-ac13-5ee6d638ac4a
 		summarizeBy: none
 		sourceColumn: BatchStatus
 
@@ -52,6 +67,7 @@ table FactBatch
 		dataType: double
 		isHidden
 		formatString: #,0.00
+		lineageTag: 480856f1-e8d6-4c47-9f58-1a148ef94117
 		summarizeBy: none
 		sourceColumn: BatchValue
 
@@ -59,6 +75,7 @@ table FactBatch
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 5e84b35b-6ca9-4b98-9361-07ae2a3b9a65
 		summarizeBy: none
 		sourceColumn: DeviationCount
 
@@ -66,6 +83,7 @@ table FactBatch
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 1ac67f39-dd8c-4202-88c6-10752484d270
 		summarizeBy: none
 		sourceColumn: RightFirstTime
 
@@ -80,3 +98,4 @@ table FactBatch
 					Typed
 
 	annotation PBI_ResultType = Table
+

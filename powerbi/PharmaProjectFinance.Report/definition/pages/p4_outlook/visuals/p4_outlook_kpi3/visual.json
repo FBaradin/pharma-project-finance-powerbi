@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "p4_outlook_kpi3",
   "position": {
-    "x": 577.5999999999999,
-    "y": 122,
+    "x": 578,
+    "y": 129,
     "z": 800,
-    "width": 179.2,
-    "height": 80,
+    "height": 73,
+    "width": 179,
     "tabOrder": 800
   },
   "visual": {

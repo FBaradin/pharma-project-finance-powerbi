@@ -1,8 +1,10 @@
 /// Disconnected scenario table for the FY outlook (read by the Scenario Outlook measure with SELECTEDVALUE).
 table DimScenario
+	lineageTag: e73a5236-1747-4c65-81ec-6f639308a98a
 
 	column Scenario
 		dataType: string
+		lineageTag: 519ca2d3-6173-4092-9eec-9d1c62ef270d
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Scenario]
@@ -12,12 +14,14 @@ table DimScenario
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 17ae9d38-ae58-4b57-b863-e9b24f7ad3a1
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Scenario Order]
 
 	column 'Scenario Description'
 		dataType: string
+		lineageTag: b9ac331c-83cf-4180-8bd7-82ad03f8d81f
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Scenario Description]
@@ -36,3 +40,4 @@ table DimScenario
 						{ "Upside", 4, "Base outlook plus every open opportunity" }
 					}
 				)
+

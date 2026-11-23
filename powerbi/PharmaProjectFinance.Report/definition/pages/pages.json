@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
   "pageOrder": [
     "p1_revenue",
     "p2_wip",
@@ -8,5 +8,5 @@
     "p5_gmp",
     "p6_glossary"
   ],
-  "activePageName": "p1_revenue"
+  "activePageName": "p2_wip"
 }

@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "p4_ro",
   "position": {
     "x": 16,
     "y": 454,
     "z": 1200,
-    "width": 928,
     "height": 252,
+    "width": 928,
     "tabOrder": 1200
   },
   "visual": {
@@ -137,8 +137,7 @@
             },
             "direction": "Ascending"
           }
-        ],
-        "isDefaultSort": false
+        ]
       }
     },
     "visualContainerObjects": {

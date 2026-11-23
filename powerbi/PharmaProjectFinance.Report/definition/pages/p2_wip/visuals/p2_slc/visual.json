@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "p2_slc",
   "position": {
     "x": 16,
     "y": 62,
     "z": 300,
+    "height": 68,
     "width": 360,
-    "height": 52,
     "tabOrder": 300
   },
   "visual": {
@@ -28,6 +28,7 @@
               },
               "queryRef": "DimProject.ProjectName",
               "nativeQueryRef": "ProjectName",
+              "active": true,
               "displayName": "Project (cards and table)"
             }
           ]
@@ -125,7 +126,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'PRJ-101 Development project'"
+                                "Value": "'PRJ-103 Commercial supply'"
                               }
                             }
                           ]

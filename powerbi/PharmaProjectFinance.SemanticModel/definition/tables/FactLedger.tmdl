@@ -1,17 +1,22 @@
 /// General-ledger extract by month-end: booked revenue and contract asset / liability balances.
 table FactLedger
+	lineageTag: 83879dbb-bfbe-4352-b6ca-f6158d2db1bd
 
 	column PeriodEnd
 		dataType: dateTime
 		isHidden
 		formatString: yyyy-mm-dd
+		lineageTag: 77e4e96b-970f-4294-9e1b-ccd1d970aa6f
 		summarizeBy: none
 		sourceColumn: PeriodEnd
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column ProjectKey
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 096206b3-62f6-4695-b34e-af42d3ca9246
 		summarizeBy: none
 		sourceColumn: ProjectKey
 
@@ -19,6 +24,7 @@ table FactLedger
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: d13d4012-f7c8-44dd-bd25-db64eb2118dd
 		summarizeBy: none
 		sourceColumn: CustomerKey
 
@@ -26,6 +32,7 @@ table FactLedger
 		dataType: double
 		isHidden
 		formatString: #,0.00
+		lineageTag: bcc76253-a2fa-4b73-bd01-6a62d07cd95f
 		summarizeBy: none
 		sourceColumn: BookedRevenue
 
@@ -33,6 +40,7 @@ table FactLedger
 		dataType: double
 		isHidden
 		formatString: #,0.00
+		lineageTag: bde4655c-b1c6-4771-b115-4f04fac366f0
 		summarizeBy: none
 		sourceColumn: GLContractAsset
 
@@ -40,6 +48,7 @@ table FactLedger
 		dataType: double
 		isHidden
 		formatString: #,0.00
+		lineageTag: 7702be76-6af4-47e5-8627-b65c86c52d2a
 		summarizeBy: none
 		sourceColumn: GLContractLiability
 
@@ -54,3 +63,4 @@ table FactLedger
 					Typed
 
 	annotation PBI_ResultType = Table
+

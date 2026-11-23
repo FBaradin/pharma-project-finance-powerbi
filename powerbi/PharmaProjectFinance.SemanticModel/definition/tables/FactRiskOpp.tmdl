@@ -1,23 +1,28 @@
 /// Risks and opportunities register feeding the outlook scenarios.
 table FactRiskOpp
+	lineageTag: 7ccb66ed-26e6-49d3-b6b7-95ed63bffc25
 
 	column ItemID
 		dataType: string
+		lineageTag: 02e6d40a-1439-45f1-aaad-ee5c8b4d3f7a
 		summarizeBy: none
 		sourceColumn: ItemID
 
 	column ItemType
 		dataType: string
+		lineageTag: 713d4c5d-2732-42c3-9803-23f7c8378418
 		summarizeBy: none
 		sourceColumn: ItemType
 
 	column Category
 		dataType: string
+		lineageTag: 86f3c20d-b6a1-4c01-b586-06f750a80bbd
 		summarizeBy: none
 		sourceColumn: Category
 
 	column Description
 		dataType: string
+		lineageTag: f3538577-1f09-4552-94aa-cacce90806b4
 		summarizeBy: none
 		sourceColumn: Description
 
@@ -25,6 +30,7 @@ table FactRiskOpp
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 2afcbbfe-81b4-4fbe-a0d8-c88553394ae4
 		summarizeBy: none
 		sourceColumn: ProjectKey
 
@@ -32,19 +38,24 @@ table FactRiskOpp
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 297798b1-ca70-4dd5-a5ad-3c63d9b4b9f8
 		summarizeBy: none
 		sourceColumn: CustomerKey
 
 	column ExpectedDate
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: 48aa89a8-07da-4840-8f78-3a6907cbdb06
 		summarizeBy: none
 		sourceColumn: ExpectedDate
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column RevenueImpact
 		dataType: double
 		isHidden
 		formatString: #,0.00
+		lineageTag: 68bdbfc3-cd73-45eb-9c38-1ae9a8899f9a
 		summarizeBy: none
 		sourceColumn: RevenueImpact
 
@@ -52,16 +63,19 @@ table FactRiskOpp
 		dataType: double
 		isHidden
 		formatString: 0%
+		lineageTag: 1caec401-b9f4-4301-be17-d751d6af7a7a
 		summarizeBy: none
 		sourceColumn: Probability
 
 	column Owner
 		dataType: string
+		lineageTag: 882d3d52-85f5-4bdd-9492-8b04a0faa1c2
 		summarizeBy: none
 		sourceColumn: Owner
 
 	column Status
 		dataType: string
+		lineageTag: 137fca7d-0106-452d-8b74-8d3c4430e210
 		summarizeBy: none
 		sourceColumn: Status
 
@@ -76,3 +90,4 @@ table FactRiskOpp
 					Typed
 
 	annotation PBI_ResultType = Table
+

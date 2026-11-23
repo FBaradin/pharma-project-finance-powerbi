@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "p3_wbs_kpi2",
   "position": {
-    "x": 390.4,
-    "y": 122,
+    "x": 390,
+    "y": 131,
     "z": 600,
-    "width": 179.2,
-    "height": 80,
+    "height": 71,
+    "width": 180,
     "tabOrder": 600
   },
   "visual": {

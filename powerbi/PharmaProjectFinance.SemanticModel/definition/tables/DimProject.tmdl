@@ -1,20 +1,24 @@
 /// Projects. One project = one contract / performance obligation with its IFRS 15 revenue-recognition method.
 table DimProject
+	lineageTag: edd7dc62-c47a-439e-a70a-5172c9e42ae0
 
 	column ProjectKey
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: c1523e98-f898-4680-b846-bc573b7c0b00
 		summarizeBy: none
 		sourceColumn: ProjectKey
 
 	column ProjectID
 		dataType: string
+		lineageTag: 5290237e-4a35-44ff-86f9-1cf6fa2f7b66
 		summarizeBy: none
 		sourceColumn: ProjectID
 
 	column ProjectName
 		dataType: string
+		lineageTag: 3d0e1d8a-a163-4e76-a445-8dd565be8e8a
 		summarizeBy: none
 		sourceColumn: ProjectName
 
@@ -22,60 +26,75 @@ table DimProject
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: ccabb6c1-e48f-4961-a80e-cf1795e34c29
 		summarizeBy: none
 		sourceColumn: CustomerKey
 
 	column Customer
 		dataType: string
+		lineageTag: 5ef4199f-86e9-47c2-a1a7-25487e2f46c6
 		summarizeBy: none
 		sourceColumn: Customer
 
 	column ServiceType
 		dataType: string
+		lineageTag: 987b8502-18b7-4e74-a1c8-fed7d0535373
 		summarizeBy: none
 		sourceColumn: ServiceType
 
 	column RevRecMethod
 		dataType: string
+		lineageTag: cae8576f-edc0-4d4d-9be8-e42e6ad4aae3
 		summarizeBy: none
 		sourceColumn: RevRecMethod
 
 	column RevRecBasis
 		dataType: string
+		lineageTag: ea42d7db-a9d4-4966-b0a3-6e5c09964d3a
 		summarizeBy: none
 		sourceColumn: RevRecBasis
 
 	column Platform
 		dataType: string
+		lineageTag: aded7d03-41db-4981-ad54-5cbc573bb7a3
 		summarizeBy: none
 		sourceColumn: Platform
 
 	column Site
 		dataType: string
+		lineageTag: dd593455-7b59-4482-ad99-72b868fbbaf7
 		summarizeBy: none
 		sourceColumn: Site
 
 	column StartDate
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: f790afc4-70e7-44a0-a574-9c5a19840984
 		summarizeBy: none
 		sourceColumn: StartDate
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column PlannedEndDate
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: f29534a4-1371-4f91-99ba-f5624cc160b1
 		summarizeBy: none
 		sourceColumn: PlannedEndDate
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column OriginalContractValue
 		dataType: double
 		isHidden
 		formatString: #,0.00
+		lineageTag: 6c4c8f38-af05-4533-97ef-c1434379e670
 		summarizeBy: none
 		sourceColumn: OriginalContractValue
 
 	column ProjectStatus
 		dataType: string
+		lineageTag: 5f070a00-1a44-41a5-9e8b-539158b226bd
 		summarizeBy: none
 		sourceColumn: ProjectStatus
 
@@ -90,3 +109,4 @@ table DimProject
 					Typed
 
 	annotation PBI_ResultType = Table
+

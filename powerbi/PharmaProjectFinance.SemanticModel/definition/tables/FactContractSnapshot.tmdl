@@ -1,17 +1,22 @@
 /// Month-end controlling snapshot of over-time projects: transaction price (incl. approved change orders) and estimate at completion (EAC).
 table FactContractSnapshot
+	lineageTag: 7aeab1d1-33fe-4cf0-ac38-fbc1819f70a3
 
 	column SnapshotDate
 		dataType: dateTime
 		isHidden
 		formatString: yyyy-mm-dd
+		lineageTag: 3bd5cea4-9ef7-49df-b9f5-3c5f57e853e5
 		summarizeBy: none
 		sourceColumn: SnapshotDate
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column ProjectKey
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 96c9ee2b-89dd-4b6e-8598-e9be0fbb4ede
 		summarizeBy: none
 		sourceColumn: ProjectKey
 
@@ -19,6 +24,7 @@ table FactContractSnapshot
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 90ec5a6f-e247-48c7-a55d-b5b696b8d246
 		summarizeBy: none
 		sourceColumn: CustomerKey
 
@@ -26,6 +32,7 @@ table FactContractSnapshot
 		dataType: double
 		isHidden
 		formatString: #,0.00
+		lineageTag: 6a3d71bc-20bf-4036-9415-0701d40ddcc9
 		summarizeBy: none
 		sourceColumn: TransactionPrice
 
@@ -33,6 +40,7 @@ table FactContractSnapshot
 		dataType: double
 		isHidden
 		formatString: #,0.00
+		lineageTag: c9038088-0897-4021-99b2-3113bab86116
 		summarizeBy: none
 		sourceColumn: EstimateAtCompletion
 
@@ -47,3 +55,4 @@ table FactContractSnapshot
 					Typed
 
 	annotation PBI_ResultType = Table
+

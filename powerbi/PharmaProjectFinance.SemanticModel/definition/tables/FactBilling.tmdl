@@ -1,21 +1,27 @@
 /// Customer invoices.
 table FactBilling
+	lineageTag: 5d7d6362-cb88-48c1-8f08-da6d2ffb6a9f
 
 	column InvoiceID
 		dataType: string
+		lineageTag: 5c963783-b519-4b7f-9a70-0d8f6ff49387
 		summarizeBy: none
 		sourceColumn: InvoiceID
 
 	column InvoiceDate
 		dataType: dateTime
 		formatString: yyyy-mm-dd
+		lineageTag: 4657011a-3974-4dbf-9420-70d83150875b
 		summarizeBy: none
 		sourceColumn: InvoiceDate
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column ProjectKey
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: d46919df-db66-4f42-a8c5-e7f4c6fe2c08
 		summarizeBy: none
 		sourceColumn: ProjectKey
 
@@ -23,16 +29,19 @@ table FactBilling
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 64300cce-3dca-4666-8d7c-aed5d15cd650
 		summarizeBy: none
 		sourceColumn: CustomerKey
 
 	column BillingMilestone
 		dataType: string
+		lineageTag: 81f60cbb-8567-447b-9ed3-91782d4951d8
 		summarizeBy: none
 		sourceColumn: BillingMilestone
 
 	column MilestoneType
 		dataType: string
+		lineageTag: 503012b9-bb76-4c2a-a8f4-aaf35bae76a1
 		summarizeBy: none
 		sourceColumn: MilestoneType
 
@@ -40,6 +49,7 @@ table FactBilling
 		dataType: double
 		isHidden
 		formatString: #,0.00
+		lineageTag: 663b024a-28c7-4836-9dcf-51133a468fb3
 		summarizeBy: none
 		sourceColumn: InvoiceAmount
 
@@ -54,3 +64,4 @@ table FactBilling
 					Typed
 
 	annotation PBI_ResultType = Table
+

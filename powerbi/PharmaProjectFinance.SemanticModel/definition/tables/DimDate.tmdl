@@ -1,11 +1,13 @@
 /// Calendar table built in DAX from the fact-table date range. Marked as the model's date table.
 table DimDate
+	lineageTag: 7489be16-995f-438c-b8cd-337c82c1e54d
 	dataCategory: Time
 
 	column Date
 		dataType: dateTime
 		isKey
 		formatString: yyyy-mm-dd
+		lineageTag: 6f015818-8044-4612-8128-3fe6e772dd96
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Date]
@@ -13,12 +15,14 @@ table DimDate
 	column Year
 		dataType: int64
 		formatString: 0
+		lineageTag: 81cbc9f1-0ebc-4db1-8474-71d5824df45a
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Year]
 
 	column Quarter
 		dataType: string
+		lineageTag: 269a3dcb-b808-4124-9d3d-c67db3de53f8
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Quarter]
@@ -27,12 +31,14 @@ table DimDate
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 750c4dea-d3c1-4c7f-8b61-5a0e1e549443
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Month Number]
 
 	column Month
 		dataType: string
+		lineageTag: 4b0f9c26-87f0-49a6-9001-29661b556139
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Month]
@@ -40,6 +46,7 @@ table DimDate
 
 	column 'Year Month'
 		dataType: string
+		lineageTag: 8e0b2382-bd8c-4d6e-a28f-2c27e867886b
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Year Month]
@@ -47,6 +54,7 @@ table DimDate
 	column 'Month Start'
 		dataType: dateTime
 		formatString: mmm yyyy
+		lineageTag: 438932f4-e87d-49ae-aecb-94cf2bf96fa3
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Month Start]
@@ -54,19 +62,24 @@ table DimDate
 	/// "Actual" up to the reporting close date (last closed month), "Forecast" after it.
 	column 'Period Type'
 		dataType: string
+		lineageTag: b1689c0c-6dc6-4ca3-a597-d24fefa05461
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Period Type]
 
 	hierarchy Calendar
+		lineageTag: a34e875b-7867-4235-a5e7-49a1c2837e24
 
 		level Year
+			lineageTag: 52419e72-8b20-45ec-81ad-5b7996346ac1
 			column: Year
 
 		level Quarter
+			lineageTag: 18117894-355d-45e7-8c9b-7c94201f97f3
 			column: Quarter
 
 		level Month
+			lineageTag: 03d99c96-e26d-4a72-b2f1-bdf62edd262f
 			column: Month
 
 	partition DimDate = calculated
@@ -86,3 +99,4 @@ table DimDate
 						"Month Start", DATE ( YEAR ( [Date] ), MONTH ( [Date] ), 1 ),
 						"Period Type", IF ( [Date] <= _close, "Actual", "Forecast" )
 					)
+

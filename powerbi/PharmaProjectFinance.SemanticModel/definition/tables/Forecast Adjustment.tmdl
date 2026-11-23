@@ -1,13 +1,16 @@
 /// What-if parameter: flexes the open-month (Nov-Dec) revenue forecast from -20% to +20%.
 table 'Forecast Adjustment'
+	lineageTag: babf5860-5a7c-46b8-aaf5-5eb91df5cb8f
 
 	/// Selected forecast adjustment as a fraction (0 when nothing or several values are selected).
 	measure 'Forecast Adjustment Value' = SELECTEDVALUE ( 'Forecast Adjustment'[Forecast Adjustment %], 0 ) / 100
 		formatString: +0%;-0%;0%
+		lineageTag: 7478912b-ef81-4c8c-bb14-91878f208829
 
 	column 'Forecast Adjustment %'
 		dataType: int64
 		formatString: 0
+		lineageTag: a60c9292-c09f-442d-b596-37daa850e396
 		summarizeBy: none
 		sourceColumn: [Value]
 
@@ -19,3 +22,4 @@ table 'Forecast Adjustment'
 	partition 'Forecast Adjustment' = calculated
 		mode: import
 		source = GENERATESERIES ( -20, 20, 5 )
+

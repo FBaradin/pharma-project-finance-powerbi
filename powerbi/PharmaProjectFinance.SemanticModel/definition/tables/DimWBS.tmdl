@@ -1,10 +1,12 @@
 /// Work breakdown structure: project > phase > work package, including the change-order element.
 table DimWBS
+	lineageTag: 98aa6911-2c80-4ca2-9e85-68a09470524f
 
 	column WBSKey
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: a06a3742-3b55-432a-867a-ca29a90ef7d3
 		summarizeBy: none
 		sourceColumn: WBSKey
 
@@ -12,53 +14,65 @@ table DimWBS
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 1cb3b3fd-7c7f-4713-942e-aa35c84a5751
 		summarizeBy: none
 		sourceColumn: ProjectKey
 
 	column ProjectID
 		dataType: string
+		lineageTag: f3ace754-1d69-4368-b9d2-3eadf8bff3b0
 		summarizeBy: none
 		sourceColumn: ProjectID
 
 	column WBSCode
 		dataType: string
+		lineageTag: fad8556d-5dbc-4a1c-865f-adfae4a81d46
 		summarizeBy: none
 		sourceColumn: WBSCode
 
 	column Phase
 		dataType: string
+		lineageTag: 1c163e7f-2557-47c3-939f-3db89cf24e67
 		summarizeBy: none
 		sourceColumn: Phase
 
 	column WorkPackage
 		dataType: string
+		lineageTag: b211e5a4-885c-4edd-a410-6e7dcd4038b6
 		summarizeBy: none
 		sourceColumn: WorkPackage
 
 	column IsChangeOrder
 		dataType: string
+		lineageTag: a4e2c98e-a0bc-4d55-941b-80e85680fb33
 		summarizeBy: none
 		sourceColumn: IsChangeOrder
 
 	column ChangeOrderID
 		dataType: string
+		lineageTag: 226e97be-abc8-4bee-9f75-185cf00a519c
 		summarizeBy: none
 		sourceColumn: ChangeOrderID
 
 	column ChangeOrderStatus
 		dataType: string
+		lineageTag: 83410c9a-5eba-4b28-b59c-a53fce33f172
 		summarizeBy: none
 		sourceColumn: ChangeOrderStatus
 
 	hierarchy 'WBS Hierarchy'
+		lineageTag: 7aa49d82-d7c0-43f2-ac1a-78f4d1142665
 
 		level Project
+			lineageTag: e0c03508-6de4-42bc-a266-8a3a0de65521
 			column: ProjectID
 
 		level Phase
+			lineageTag: 77d82e3d-8a64-4377-a111-19a9529557df
 			column: Phase
 
 		level 'Work Package'
+			lineageTag: 8aaf1a14-e040-4b5f-ad0d-bfbedc646d2d
 			column: WorkPackage
 
 	partition DimWBS = m
@@ -72,3 +86,4 @@ table DimWBS
 					Typed
 
 	annotation PBI_ResultType = Table
+

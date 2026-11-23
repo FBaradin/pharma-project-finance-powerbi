@@ -10,3 +10,24 @@ model Model
 annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBI_ProTooling = ["DevMode"]
+
+annotation PBI_QueryOrder = ["DimCustomer","DimProject","DimWBS","FactBatch","FactBilling","FactContractSnapshot","FactCost","FactCostPlan","FactLedger","FactRevenuePlan","FactRiskOpp","_Measures","DataFolder"]
+
+ref table DimCustomer
+ref table DimDate
+ref table DimProject
+ref table DimScenario
+ref table DimWBS
+ref table FactBatch
+ref table FactBilling
+ref table FactContractSnapshot
+ref table FactCost
+ref table FactCostPlan
+ref table FactLedger
+ref table FactRevenuePlan
+ref table FactRiskOpp
+ref table 'Forecast Adjustment'
+ref table _Measures
+
+ref cultureInfo en-US
+

@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "p5_gmp_kpi4",
   "position": {
-    "x": 764.8,
-    "y": 122,
+    "x": 765,
+    "y": 132,
     "z": 800,
-    "width": 179.2,
-    "height": 80,
+    "height": 70,
+    "width": 179,
     "tabOrder": 800
   },
   "visual": {

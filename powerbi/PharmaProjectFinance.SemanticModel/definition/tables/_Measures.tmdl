@@ -1,10 +1,12 @@
 /// Home table for every explicit measure, organised in display folders that follow the report pages.
 table _Measures
+	lineageTag: 94d820bb-a7ab-46ed-9617-885cddae2b0b
 
 	/// Last closed month-end = latest period in the general-ledger extract. Everything after it is forecast.
 	measure 'Reporting Close Date' = CALCULATE ( MAX ( FactLedger[PeriodEnd] ), REMOVEFILTERS () )
 		formatString: dd mmm yyyy
 		displayFolder: 0 Helpers
+		lineageTag: 9b91d405-e2ea-42ce-a115-f9855a2815b2
 
 	/// The date every "to date" (balance) measure is evaluated at: end of the period in context, capped at the close date.
 	measure 'As-of Date' =
@@ -14,15 +16,18 @@ table _Measures
 				IF ( NOT ISBLANK ( _periodEnd ), MIN ( _periodEnd, _close ) )
 		formatString: dd mmm yyyy
 		displayFolder: 0 Helpers
+		lineageTag: ef7f1b9d-16b7-47ab-a0fb-f6785ef36173
 
 	/// Header text, e.g. "Actuals to 31 Oct 2026 · USD · synthetic data".
 	measure 'Report Subtitle' = "Actuals to " & FORMAT ( [Reporting Close Date], "dd mmm yyyy" ) & "  ·  USD  ·  synthetic data"
 		displayFolder: 0 Helpers
+		lineageTag: db3b9e73-34b4-41b1-b16b-9a56134abcc8
 
 	/// Actual cost posted in the period in context.
 	measure 'Actual Cost' = SUM ( FactCost[ActualCost] )
 		formatString: \$#,0
 		displayFolder: 1 Revenue Recognition
+		lineageTag: 8f31e5cc-60cd-44fd-986e-656bbec298f2
 
 	/// Inception-to-date actual cost at the as-of date.
 	measure 'Cost to Date' =
@@ -34,6 +39,7 @@ table _Measures
 				)
 		formatString: \$#,0
 		displayFolder: 1 Revenue Recognition
+		lineageTag: e635fdcd-21f5-4417-a98c-8ade871d5815
 
 	/// Contract value (original price + approved change orders) in the as-of month's controlling snapshot.
 	measure 'Transaction Price' =
@@ -49,6 +55,7 @@ table _Measures
 				)
 		formatString: \$#,0
 		displayFolder: 1 Revenue Recognition
+		lineageTag: c501c7c3-6685-4ed6-a4d4-c701b6458d20
 
 	/// Estimate at completion (EAC): the latest forecast of the project's total cost, from the as-of month's snapshot.
 	measure 'Estimate at Completion (EAC)' =
@@ -64,6 +71,7 @@ table _Measures
 				)
 		formatString: \$#,0
 		displayFolder: 1 Revenue Recognition
+		lineageTag: f6cde5b2-2ace-4635-a805-1a8398ac13af
 
 	/// Over-time revenue to date, cost-to-cost method, project by project:
 	/// transaction price x MIN ( 1, cost to date / EAC ).
@@ -87,6 +95,7 @@ table _Measures
 				)
 		formatString: \$#,0
 		displayFolder: 1 Revenue Recognition
+		lineageTag: d2242935-5660-449d-8200-1ad7534cdd74
 
 	/// Point-in-time revenue to date: value of commercial batches released by QA up to the as-of date.
 	measure 'Revenue to Date (Point in Time)' =
@@ -104,11 +113,13 @@ table _Measures
 				)
 		formatString: \$#,0
 		displayFolder: 1 Revenue Recognition
+		lineageTag: 66871219-3bc1-4ba3-aa3d-7168439e9fdd
 
 	/// Total revenue earned since the start of the contract, at the as-of date.
 	measure 'Revenue to Date' = [Revenue to Date (Over Time)] + [Revenue to Date (Point in Time)]
 		formatString: \$#,0
 		displayFolder: 1 Revenue Recognition
+		lineageTag: 2416ba4b-1fd9-4b43-940c-095ef7e2d056
 
 	/// Revenue to date on the day before the period in context starts.
 	measure 'Revenue to Date (Opening)' =
@@ -117,31 +128,37 @@ table _Measures
 				CALCULATE ( [Revenue to Date], REMOVEFILTERS ( DimDate ), DimDate[Date] = _openingDate )
 		formatString: \$#,0
 		displayFolder: 1 Revenue Recognition
+		lineageTag: 7ea8165e-2e41-4238-bb53-5270d1ffca8e
 
 	/// Revenue recognised in the period = revenue to date at the end - revenue to date at the start.
 	/// An EAC change therefore hits the month it happens in (cumulative catch-up).
 	measure 'Revenue Recognised' = [Revenue to Date] - [Revenue to Date (Opening)]
 		formatString: \$#,0
 		displayFolder: 1 Revenue Recognition
+		lineageTag: 35188cd4-56ba-461e-9367-c84874cafef2
 
 	/// Cost-to-cost % complete of over-time projects (weighted by contract value when several are selected).
 	measure '% Complete' = DIVIDE ( [Revenue to Date (Over Time)], [Transaction Price] )
 		formatString: 0.0%
 		displayFolder: 1 Revenue Recognition
+		lineageTag: 51b7885d-a6d8-437c-87db-9ed183ee1849
 
 	/// Revenue recognised minus actual cost in the period.
 	measure 'Gross Margin' = [Revenue Recognised] - [Actual Cost]
 		formatString: \$#,0
 		displayFolder: 1 Revenue Recognition
+		lineageTag: c111741d-3f78-47b3-93b3-c8d41067539e
 
 	measure 'Gross Margin %' = DIVIDE ( [Gross Margin], [Revenue Recognised] )
 		formatString: 0.0%
 		displayFolder: 1 Revenue Recognition
+		lineageTag: 4b028cd3-fab8-4980-9792-ed067aac9ffc
 
 	/// Invoices issued in the period in context.
 	measure 'Invoiced Amount' = SUM ( FactBilling[InvoiceAmount] )
 		formatString: \$#,0
 		displayFolder: 2 WIP & Deferred
+		lineageTag: 4c563f76-e1a3-4c35-97d9-8c3ed49ab369
 
 	/// Inception-to-date invoicing at the as-of date.
 	measure 'Billed to Date' =
@@ -153,11 +170,13 @@ table _Measures
 				)
 		formatString: \$#,0
 		displayFolder: 2 WIP & Deferred
+		lineageTag: e99b9872-81b8-4a01-b827-9576f5f560d0
 
 	/// Earned minus billed. Positive = contract asset (WIP, unbilled). Negative = contract liability (deferred revenue).
 	measure 'Net Contract Position' = [Revenue to Date] - [Billed to Date]
 		formatString: \$#,0;-\$#,0;\$0
 		displayFolder: 2 WIP & Deferred
+		lineageTag: 17166b40-fdb2-4836-8403-355508d01330
 
 	/// Contract assets (WIP): sum of the projects whose position is POSITIVE. Never netted across contracts.
 	measure 'Contract Assets (WIP)' =
@@ -169,6 +188,7 @@ table _Measures
 			) + 0
 		formatString: \$#,0
 		displayFolder: 2 WIP & Deferred
+		lineageTag: 749079bd-dd12-4722-9f18-923cccd9f6db
 
 	/// Contract liabilities (deferred revenue): sum of the projects whose position is NEGATIVE, shown as a positive amount.
 	measure 'Contract Liabilities (Deferred)' =
@@ -180,6 +200,7 @@ table _Measures
 			) + 0
 		formatString: \$#,0
 		displayFolder: 2 WIP & Deferred
+		lineageTag: 8d758f7a-e860-405c-b285-d8b96f9a9d70
 
 	/// Plain-language label for the position in context.
 	measure 'Balance Type' =
@@ -193,6 +214,7 @@ table _Measures
 					"Settled"
 				)
 		displayFolder: 2 WIP & Deferred
+		lineageTag: 5c3f167f-4a1c-40cf-bd59-7b0c5130555e
 
 	/// Whole months between the last invoice and the as-of date.
 	measure 'Months Since Last Invoice' =
@@ -203,6 +225,7 @@ table _Measures
 				IF ( NOT ISBLANK ( _lastInvoice ), DATEDIFF ( _lastInvoice, _asOf, MONTH ) )
 		formatString: 0
 		displayFolder: 2 WIP & Deferred
+		lineageTag: 5c00a3e5-c843-4fef-8e7a-90c287e358ab
 
 	/// Warns when unbilled revenue has been building for 3+ months (late billing or over-stated progress).
 	measure 'WIP Ageing Flag' =
@@ -212,6 +235,7 @@ table _Measures
 				"OK"
 			)
 		displayFolder: 2 WIP & Deferred
+		lineageTag: 801a7c22-2850-4264-a381-7c77b3fd1cfa
 
 	/// Contract asset minus contract liability booked in the general ledger at the as-of month-end.
 	measure 'GL Net Contract Balance' =
@@ -227,11 +251,13 @@ table _Measures
 				)
 		formatString: \$#,0;-\$#,0;\$0
 		displayFolder: 2 WIP & Deferred
+		lineageTag: 677324c4-e594-4dbe-b091-cb8547af6cec
 
 	/// Model position minus GL balance. Should be zero.
 	measure 'Difference vs GL' = [Net Contract Position] - [GL Net Contract Balance]
 		formatString: \$#,0;-\$#,0;\$0
 		displayFolder: 2 WIP & Deferred
+		lineageTag: 19c574a9-67a3-4927-99da-a7077f3c90ac
 
 	/// "✔ Matches GL" or "⚠ Investigate" (difference above 1 USD).
 	measure 'Recon Status' =
@@ -240,12 +266,13 @@ table _Measures
 				IF ( ABS ( [Difference vs GL] ) <= 1, "✔ Matches GL", "⚠ Investigate" )
 			)
 		displayFolder: 2 WIP & Deferred
+		lineageTag: f6bdf73e-7d81-4fb1-bb61-fa4cd799b0b5
 
 	/// Number of projects whose model position differs from the GL. Tested per project because offsetting errors cancel in totals.
-	measure 'Projects to Investigate' =
-			COUNTROWS ( FILTER ( VALUES ( DimProject[ProjectKey] ), ABS ( [Difference vs GL] ) > 1 ) ) + 0
+	measure 'Projects to Investigate' = COUNTROWS ( FILTER ( VALUES ( DimProject[ProjectKey] ), ABS ( [Difference vs GL] ) > 1 ) ) + 0
 		formatString: 0
 		displayFolder: 2 WIP & Deferred
+		lineageTag: b364a3c5-76b5-4b52-b135-c72e923df7ee
 
 	/// Budget at completion (BAC): time-phased budget in total, incl. change orders approved by the as-of date.
 	measure 'Budget at Completion (BAC)' =
@@ -258,6 +285,7 @@ table _Measures
 				)
 		formatString: \$#,0
 		displayFolder: 3 WBS & Project Control
+		lineageTag: 18276aa9-a675-4810-b3e2-95bb32f78dc3
 
 	/// Planned value (PV): budgeted cost of the work scheduled up to the as-of date.
 	measure 'Planned Value (PV)' =
@@ -274,11 +302,13 @@ table _Measures
 				)
 		formatString: \$#,0
 		displayFolder: 3 WBS & Project Control
+		lineageTag: fc7c929e-66af-43a5-b05c-e5fe2797cedf
 
 	/// Actual cost (AC) to date, the earned-value name for Cost to Date.
 	measure 'Actual Cost (AC)' = [Cost to Date]
 		formatString: \$#,0
 		displayFolder: 3 WBS & Project Control
+		lineageTag: e1f909bb-9cd7-42da-b269-e3e11978fd55
 
 	/// Earned value (EV): budget of the work actually done = BAC x % complete (cost-to-cost), per over-time project.
 	measure 'Earned Value (EV)' =
@@ -294,24 +324,27 @@ table _Measures
 			)
 		formatString: \$#,0
 		displayFolder: 3 WBS & Project Control
+		lineageTag: c64277ab-27d0-4a7d-a0b4-b4e44647ef73
 
 	/// Cost performance index = EV / AC. Below 1 = each dollar spent delivers less than a dollar of planned work (over budget).
-	measure 'CPI' =
+	measure CPI =
 			DIVIDE (
 				[Earned Value (EV)],
 				CALCULATE ( [Cost to Date], DimProject[RevRecMethod] = "Over time", REMOVEFILTERS ( DimWBS ) )
 			)
 		formatString: 0.00
 		displayFolder: 3 WBS & Project Control
+		lineageTag: 31801d2f-1ed9-413d-b0e1-8094a94c2de0
 
 	/// Schedule performance index = EV / PV. Below 1 = behind schedule.
-	measure 'SPI' =
+	measure SPI =
 			DIVIDE (
 				[Earned Value (EV)],
 				CALCULATE ( [Planned Value (PV)], DimProject[RevRecMethod] = "Over time", REMOVEFILTERS ( DimWBS ) )
 			)
 		formatString: 0.00
 		displayFolder: 3 WBS & Project Control
+		lineageTag: cc2f570a-6b98-4121-895c-b59c7e475220
 
 	/// Forecast over/underrun at completion: BAC - EAC (negative = overrun).
 	measure 'Variance at Completion (VAC)' =
@@ -320,20 +353,24 @@ table _Measures
 				IF ( NOT ISBLANK ( _eac ), CALCULATE ( [Budget at Completion (BAC)], REMOVEFILTERS ( DimWBS ) ) - _eac )
 		formatString: \$#,0;-\$#,0;\$0
 		displayFolder: 3 WBS & Project Control
+		lineageTag: 2fac59a2-75e3-4e69-ad61-d0c281d79627
 
 	/// Budget not yet spent: BAC - actual cost to date.
 	measure 'Budget Remaining' = [Budget at Completion (BAC)] - [Cost to Date]
 		formatString: \$#,0;-\$#,0;\$0
 		displayFolder: 3 WBS & Project Control
+		lineageTag: dabb6dd2-cde6-4aee-96c3-c91784eced5a
 
 	/// Planned to date minus actual to date (negative = spending more than planned so far).
 	measure 'Cost Variance to Plan' = [Planned Value (PV)] - [Cost to Date]
 		formatString: \$#,0;-\$#,0;\$0
 		displayFolder: 3 WBS & Project Control
+		lineageTag: b3e96937-95d7-4acd-a82d-c53b7ca613d8
 
 	measure 'Revenue Budget' = CALCULATE ( SUM ( FactRevenuePlan[PlanRevenue] ), FactRevenuePlan[PlanType] = "Budget" )
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: 33dd7e02-4c8b-472d-885c-3d92a657f6fd
 
 	/// Forecast for the open months, flexed by the Forecast Adjustment what-if parameter.
 	measure 'Revenue Forecast' =
@@ -341,11 +378,13 @@ table _Measures
 				* ( 1 + [Forecast Adjustment Value] )
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: 0a7759a8-d017-4c55-ae8e-620a70c70efa
 
 	/// Actual revenue for closed months + forecast for open months.
 	measure 'Revenue Actual + Forecast' = [Revenue Recognised] + [Revenue Forecast]
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: d457a2f8-09a2-4110-a6ec-74cfeed178f0
 
 	/// Full-year revenue target of the reporting year.
 	measure 'FY Budget' =
@@ -354,6 +393,7 @@ table _Measures
 				CALCULATE ( [Revenue Budget], REMOVEFILTERS ( DimDate ), DimDate[Year] = _fy )
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: ae4d75d5-d9db-4681-8266-8233d436018c
 
 	/// Revenue actually recognised from 1 January to the close date.
 	measure 'FY Actual to Date' =
@@ -362,6 +402,7 @@ table _Measures
 				CALCULATE ( [Revenue Recognised], REMOVEFILTERS ( DimDate ), DimDate[Year] = _fy )
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: 87627b98-e3ae-4500-a8f4-1e01577b26f5
 
 	/// Forecast revenue for the remaining (open) months of the year.
 	measure 'FY Remaining Forecast' =
@@ -370,19 +411,23 @@ table _Measures
 				CALCULATE ( [Revenue Forecast], REMOVEFILTERS ( DimDate ), DimDate[Year] = _fy )
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: f50799db-18e0-470f-a22e-02bbfd462bb4
 
 	/// Base outlook = actual to date + remaining forecast.
 	measure 'FY Base Outlook' = [FY Actual to Date] + [FY Remaining Forecast]
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: e66280c6-5a27-4b1c-a1b0-1e5dc2e8517c
 
 	measure 'FY Risks' = CALCULATE ( SUM ( FactRiskOpp[RevenueImpact] ), FactRiskOpp[ItemType] = "Risk", REMOVEFILTERS ( DimDate ) )
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: d75b11f0-3c17-435f-b31f-4a911c0dbb8c
 
 	measure 'FY Opportunities' = CALCULATE ( SUM ( FactRiskOpp[RevenueImpact] ), FactRiskOpp[ItemType] = "Opportunity", REMOVEFILTERS ( DimDate ) )
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: 383ecf25-3d70-4b1f-875c-4f1bd266b879
 
 	/// Expected value of risks: impact x probability, item by item.
 	measure 'FY Risks (Weighted)' =
@@ -393,6 +438,7 @@ table _Measures
 			)
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: 6d093418-23a2-488f-8c1c-79e14a6d3af6
 
 	measure 'FY Opportunities (Weighted)' =
 			CALCULATE (
@@ -402,6 +448,7 @@ table _Measures
 			)
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: 9862809f-547e-44a2-9b43-10f14291dc30
 
 	/// Full-year revenue for the scenario in context (slicer or chart axis). Defaults to Base.
 	measure 'Scenario Outlook' =
@@ -416,19 +463,23 @@ table _Measures
 				)
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: da4a0602-179a-446b-a8f6-916a601f542f
 
 	/// Scenario outlook minus full-year budget (negative = below target).
 	measure 'Gap to Budget' = [Scenario Outlook] - [FY Budget]
 		formatString: +\$#,0;-\$#,0;\$0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: b3a5569b-667f-47eb-b8a3-35c802587661
 
 	measure 'R&O Impact' = SUM ( FactRiskOpp[RevenueImpact] )
 		formatString: \$#,0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: d8fd4fc9-b92a-42dd-ad8b-c55c6d33a3bc
 
 	measure 'R&O Probability' = AVERAGE ( FactRiskOpp[Probability] )
 		formatString: 0%
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: 0dd70dbd-4eb2-4576-a577-c4ad4651ff8f
 
 	/// Impact x probability, signed: opportunities +, risks -.
 	measure 'R&O Weighted Impact' =
@@ -439,25 +490,29 @@ table _Measures
 			)
 		formatString: +\$#,0;-\$#,0;\$0
 		displayFolder: 4 Outlook Scenarios
+		lineageTag: e2d80668-1b29-49aa-a7bf-fe1856a866b9
 
 	/// Number of batches, dated by PLANNED release (inactive relationship activated with USERELATIONSHIP).
-	measure 'Batches' =
-			CALCULATE ( COUNTROWS ( FactBatch ), USERELATIONSHIP ( FactBatch[PlannedReleaseDate], DimDate[Date] ) )
+	measure Batches = CALCULATE ( COUNTROWS ( FactBatch ), USERELATIONSHIP ( FactBatch[PlannedReleaseDate], DimDate[Date] ) )
 		formatString: 0
 		displayFolder: 5 GMP Batches
+		lineageTag: d56766f8-c90a-4129-a1fd-7e0ef273b7a3
 
 	measure 'Batches Released' = CALCULATE ( [Batches], FactBatch[BatchStatus] = "Released" ) + 0
 		formatString: 0
 		displayFolder: 5 GMP Batches
+		lineageTag: 33ed72a7-1373-42c6-8b7a-966a3135bb25
 
 	measure 'Batches Failed' = CALCULATE ( [Batches], FactBatch[BatchStatus] = "Failed" ) + 0
 		formatString: 0
 		displayFolder: 5 GMP Batches
+		lineageTag: 1f4fa09f-3bb1-42bb-9df9-fe60cf4bade2
 
 	/// Released / (released + failed): only batches with a final QA decision count.
 	measure 'Batch Success Rate' = DIVIDE ( [Batches Released], [Batches Released] + [Batches Failed] )
 		formatString: 0.0%
 		displayFolder: 5 GMP Batches
+		lineageTag: 7b2cd31e-aba3-45a5-ba5c-7a440e1c3f99
 
 	/// Released with zero deviations / (released + failed).
 	measure 'Right First Time %' =
@@ -467,24 +522,25 @@ table _Measures
 			)
 		formatString: 0.0%
 		displayFolder: 5 GMP Batches
+		lineageTag: d1df018b-96d3-4851-ba5f-7813f127ad08
 
 	/// Commercial revenue waiting for QA release: no release, no revenue.
-	measure 'Revenue Awaiting QA Release' =
-			CALCULATE ( SUM ( FactBatch[BatchValue] ), FactBatch[BatchStatus] = "Under QA review", REMOVEFILTERS ( DimDate ) ) + 0
+	measure 'Revenue Awaiting QA Release' = CALCULATE ( SUM ( FactBatch[BatchValue] ), FactBatch[BatchStatus] = "Under QA review", REMOVEFILTERS ( DimDate ) ) + 0
 		formatString: \$#,0
 		displayFolder: 5 GMP Batches
+		lineageTag: 97dd29f4-b836-4c8a-be18-220a8969f029
 
 	/// Value of failed batches: no revenue, and their cost is absorbed.
-	measure 'Revenue Lost (Failed Batches)' =
-			CALCULATE ( SUM ( FactBatch[BatchValue] ), FactBatch[BatchStatus] = "Failed", REMOVEFILTERS ( DimDate ) ) + 0
+	measure 'Revenue Lost (Failed Batches)' = CALCULATE ( SUM ( FactBatch[BatchValue] ), FactBatch[BatchStatus] = "Failed", REMOVEFILTERS ( DimDate ) ) + 0
 		formatString: \$#,0
 		displayFolder: 5 GMP Batches
+		lineageTag: fb583a50-e462-4b0e-b8b5-1e340312ce45
 
 	/// Batch value (commercial batches only).
-	measure 'Batch Value' =
-			CALCULATE ( SUM ( FactBatch[BatchValue] ), USERELATIONSHIP ( FactBatch[PlannedReleaseDate], DimDate[Date] ) )
+	measure 'Batch Value' = CALCULATE ( SUM ( FactBatch[BatchValue] ), USERELATIONSHIP ( FactBatch[PlannedReleaseDate], DimDate[Date] ) )
 		formatString: \$#,0
 		displayFolder: 5 GMP Batches
+		lineageTag: e1e91a1a-442d-401b-8080-7910361dde02
 
 	/// Revenue recognised for the batch: its value if QA released it, otherwise zero.
 	measure 'Batch Revenue Recognised' =
@@ -495,15 +551,17 @@ table _Measures
 			)
 		formatString: \$#,0
 		displayFolder: 5 GMP Batches
+		lineageTag: 64dd4f7d-81d6-4697-8ea5-6d1df4f1e130
 
-	measure 'Deviations' =
-			CALCULATE ( SUM ( FactBatch[DeviationCount] ), USERELATIONSHIP ( FactBatch[PlannedReleaseDate], DimDate[Date] ) )
+	measure Deviations = CALCULATE ( SUM ( FactBatch[DeviationCount] ), USERELATIONSHIP ( FactBatch[PlannedReleaseDate], DimDate[Date] ) )
 		formatString: 0
 		displayFolder: 5 GMP Batches
+		lineageTag: 1417b406-023a-4c46-873b-cc48a51f939f
 
 	column Placeholder
 		dataType: string
 		isHidden
+		lineageTag: 1bde0088-ff46-404a-8fe8-d6c1447ee85a
 		summarizeBy: none
 		sourceColumn: Placeholder
 
@@ -512,3 +570,4 @@ table _Measures
 		source = #table(type table [Placeholder = text], {})
 
 	annotation PBI_ResultType = Table
+

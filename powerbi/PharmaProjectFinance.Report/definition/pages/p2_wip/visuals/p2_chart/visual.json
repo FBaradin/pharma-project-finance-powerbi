@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "p2_chart",
   "position": {
     "x": 16,
     "y": 210,
     "z": 900,
-    "width": 470,
     "height": 236,
+    "width": 470,
     "tabOrder": 900
   },
   "visual": {
@@ -28,6 +28,7 @@
               },
               "queryRef": "DimDate.Year Month",
               "nativeQueryRef": "Year Month",
+              "active": true,
               "displayName": "Month"
             }
           ]
@@ -86,8 +87,7 @@
             },
             "direction": "Ascending"
           }
-        ],
-        "isDefaultSort": false
+        ]
       }
     },
     "visualContainerObjects": {

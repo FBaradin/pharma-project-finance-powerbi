@@ -1,17 +1,22 @@
 /// Revenue budget (target) and forecast for the open months.
 table FactRevenuePlan
+	lineageTag: 951565d4-6d13-4172-a7e6-1a3bc62fb959
 
 	column PeriodEnd
 		dataType: dateTime
 		isHidden
 		formatString: yyyy-mm-dd
+		lineageTag: c0f2dcae-2a6d-420f-835d-f89aea45bfbb
 		summarizeBy: none
 		sourceColumn: PeriodEnd
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column ProjectKey
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: cc05f7b1-6600-4bed-afce-ae42ab475ab5
 		summarizeBy: none
 		sourceColumn: ProjectKey
 
@@ -19,11 +24,13 @@ table FactRevenuePlan
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: b74e5940-bf1b-4e2f-a3cb-0194e2177a72
 		summarizeBy: none
 		sourceColumn: CustomerKey
 
 	column PlanType
 		dataType: string
+		lineageTag: 081ee6e4-7c7d-4e23-b4a5-2595dd223e51
 		summarizeBy: none
 		sourceColumn: PlanType
 
@@ -31,6 +38,7 @@ table FactRevenuePlan
 		dataType: double
 		isHidden
 		formatString: #,0.00
+		lineageTag: 8a605852-deac-4adf-a502-fd04532b85a6
 		summarizeBy: none
 		sourceColumn: PlanRevenue
 
@@ -45,3 +53,4 @@ table FactRevenuePlan
 					Typed
 
 	annotation PBI_ResultType = Table
+

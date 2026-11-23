@@ -1,17 +1,22 @@
 /// Time-phased cost budget by month and WBS element. Gives BAC (total) and planned value (to date). Change-order budget counts from its approval date.
 table FactCostPlan
+	lineageTag: f498146b-126e-4023-b298-f973738e95a2
 
 	column PlanDate
 		dataType: dateTime
 		isHidden
 		formatString: yyyy-mm-dd
+		lineageTag: b6cd31b2-4370-4dbf-9714-675275a5731c
 		summarizeBy: none
 		sourceColumn: PlanDate
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column ProjectKey
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: 7a051102-d427-4b94-894f-5e48b261edad
 		summarizeBy: none
 		sourceColumn: ProjectKey
 
@@ -19,6 +24,7 @@ table FactCostPlan
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: aa4b583b-2406-4cff-a6fd-65f14c3cee33
 		summarizeBy: none
 		sourceColumn: CustomerKey
 
@@ -26,11 +32,13 @@ table FactCostPlan
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: b82f1f4e-f803-46e9-90c2-3b3d8deb7047
 		summarizeBy: none
 		sourceColumn: WBSKey
 
 	column BudgetType
 		dataType: string
+		lineageTag: a52bcfd8-6324-4a6a-bd08-4a028acd2738
 		summarizeBy: none
 		sourceColumn: BudgetType
 
@@ -38,13 +46,17 @@ table FactCostPlan
 		dataType: dateTime
 		isHidden
 		formatString: yyyy-mm-dd
+		lineageTag: 0af799af-a9b9-4cc8-824f-df27c2441f6b
 		summarizeBy: none
 		sourceColumn: ApprovalDate
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column PlannedCost
 		dataType: double
 		isHidden
 		formatString: #,0.00
+		lineageTag: a1d6116b-7519-4cf2-83c0-cf7095a227db
 		summarizeBy: none
 		sourceColumn: PlannedCost
 
@@ -59,3 +71,4 @@ table FactCostPlan
 					Typed
 
 	annotation PBI_ResultType = Table
+

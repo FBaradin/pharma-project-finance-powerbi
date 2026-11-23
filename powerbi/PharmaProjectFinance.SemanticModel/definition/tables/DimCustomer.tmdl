@@ -1,20 +1,24 @@
 /// Customers (anonymised).
 table DimCustomer
+	lineageTag: 6ce23fa6-f728-4aa3-ac1f-dbd0f0676606
 
 	column CustomerKey
 		dataType: int64
 		isHidden
 		formatString: 0
+		lineageTag: d23997ee-7061-4166-92cc-982dbcb5e6f1
 		summarizeBy: none
 		sourceColumn: CustomerKey
 
 	column Customer
 		dataType: string
+		lineageTag: 35333b78-2d09-4988-929f-525fe28997cb
 		summarizeBy: none
 		sourceColumn: Customer
 
 	column CustomerSegment
 		dataType: string
+		lineageTag: 48370873-6e7f-44cb-8138-a3451550affc
 		summarizeBy: none
 		sourceColumn: CustomerSegment
 
@@ -29,3 +33,4 @@ table DimCustomer
 					Typed
 
 	annotation PBI_ResultType = Table
+

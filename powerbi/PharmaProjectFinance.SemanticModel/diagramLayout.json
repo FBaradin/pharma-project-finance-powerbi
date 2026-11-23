@@ -1,0 +1,202 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1624.9452286924948,
+            "y": 503.78874424150808
+          },
+          "nodeIndex": "_Measures",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 411.18537903639464,
+            "y": 906.40766419868919
+          },
+          "nodeIndex": "DimCustomer",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 496.97778659510442,
+            "y": 303.64692294132203
+          },
+          "nodeIndex": "DimDate",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 839.79661359338775,
+            "y": 303.6470618058255
+          },
+          "nodeIndex": "DimProject",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1908.9452286924948,
+            "y": 577.78874424150808
+          },
+          "nodeIndex": "DimScenario",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 881.57320278937812,
+            "y": 957.57748848301628
+          },
+          "nodeIndex": "DimWBS",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 210.03293930978904,
+            "y": -14.658189162363897
+          },
+          "nodeIndex": "FactBatch",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 566.798888985596,
+            "y": 2.2139756243186639
+          },
+          "nodeIndex": "FactBilling",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 338.47140176633059
+          },
+          "nodeIndex": "FactContractSnapshot",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 641.46266468643341,
+            "y": 654.8738611483468
+          },
+          "nodeIndex": "FactCost",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1106.3273296226321,
+            "y": 656.13799871168771
+          },
+          "nodeIndex": "FactCostPlan",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1278.4016940016963,
+            "y": 303.24481369861087
+          },
+          "nodeIndex": "FactLedger",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1390.9452286924948,
+            "y": 915.30007769202541
+          },
+          "nodeIndex": "FactRevenuePlan",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1088.4200322987626,
+            "y": -50
+          },
+          "nodeIndex": "FactRiskOpp",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2192.9452286924948,
+            "y": 541.78874424150808
+          },
+          "nodeIndex": "Forecast Adjustment",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}
