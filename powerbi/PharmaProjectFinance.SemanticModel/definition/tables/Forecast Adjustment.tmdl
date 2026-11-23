@@ -1,0 +1,21 @@
+/// What-if parameter: flexes the open-month (Nov-Dec) revenue forecast from -20% to +20%.
+table 'Forecast Adjustment'
+
+	/// Selected forecast adjustment as a fraction (0 when nothing or several values are selected).
+	measure 'Forecast Adjustment Value' = SELECTEDVALUE ( 'Forecast Adjustment'[Forecast Adjustment %], 0 ) / 100
+		formatString: +0%;-0%;0%
+
+	column 'Forecast Adjustment %'
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+	partition 'Forecast Adjustment' = calculated
+		mode: import
+		source = GENERATESERIES ( -20, 20, 5 )

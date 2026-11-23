@@ -1,0 +1,61 @@
+/// Time-phased cost budget by month and WBS element. Gives BAC (total) and planned value (to date). Change-order budget counts from its approval date.
+table FactCostPlan
+
+	column PlanDate
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: PlanDate
+
+	column ProjectKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: ProjectKey
+
+	column CustomerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+	column WBSKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: WBSKey
+
+	column BudgetType
+		dataType: string
+		summarizeBy: none
+		sourceColumn: BudgetType
+
+	column ApprovalDate
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: ApprovalDate
+
+	column PlannedCost
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: PlannedCost
+
+	partition FactCostPlan = m
+		mode: import
+		source =
+				let
+					Source = Excel.Workbook(File.Contents(DataFolder & "pharma_project_finance.xlsx"), null, true),
+					Data = Source{[Item = "FactCostPlan", Kind = "Table"]}[Data],
+					Typed = Table.TransformColumnTypes(Data, {{"PlanDate", type date}, {"ProjectKey", Int64.Type}, {"CustomerKey", Int64.Type}, {"WBSKey", Int64.Type}, {"BudgetType", type text}, {"ApprovalDate", type date}, {"PlannedCost", type number}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

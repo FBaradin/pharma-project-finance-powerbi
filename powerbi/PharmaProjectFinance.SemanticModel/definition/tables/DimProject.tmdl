@@ -1,0 +1,92 @@
+/// Projects. One project = one contract / performance obligation with its IFRS 15 revenue-recognition method.
+table DimProject
+
+	column ProjectKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: ProjectKey
+
+	column ProjectID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ProjectID
+
+	column ProjectName
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ProjectName
+
+	column CustomerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+	column Customer
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Customer
+
+	column ServiceType
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ServiceType
+
+	column RevRecMethod
+		dataType: string
+		summarizeBy: none
+		sourceColumn: RevRecMethod
+
+	column RevRecBasis
+		dataType: string
+		summarizeBy: none
+		sourceColumn: RevRecBasis
+
+	column Platform
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Platform
+
+	column Site
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Site
+
+	column StartDate
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: StartDate
+
+	column PlannedEndDate
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: PlannedEndDate
+
+	column OriginalContractValue
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: OriginalContractValue
+
+	column ProjectStatus
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ProjectStatus
+
+	partition DimProject = m
+		mode: import
+		source =
+				let
+					Source = Excel.Workbook(File.Contents(DataFolder & "pharma_project_finance.xlsx"), null, true),
+					Data = Source{[Item = "DimProject", Kind = "Table"]}[Data],
+					Typed = Table.TransformColumnTypes(Data, {{"ProjectKey", Int64.Type}, {"ProjectID", type text}, {"ProjectName", type text}, {"CustomerKey", Int64.Type}, {"Customer", type text}, {"ServiceType", type text}, {"RevRecMethod", type text}, {"RevRecBasis", type text}, {"Platform", type text}, {"Site", type text}, {"StartDate", type date}, {"PlannedEndDate", type date}, {"OriginalContractValue", type number}, {"ProjectStatus", type text}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

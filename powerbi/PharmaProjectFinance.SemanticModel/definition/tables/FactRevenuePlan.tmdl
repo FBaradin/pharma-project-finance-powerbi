@@ -1,0 +1,47 @@
+/// Revenue budget (target) and forecast for the open months.
+table FactRevenuePlan
+
+	column PeriodEnd
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: PeriodEnd
+
+	column ProjectKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: ProjectKey
+
+	column CustomerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+	column PlanType
+		dataType: string
+		summarizeBy: none
+		sourceColumn: PlanType
+
+	column PlanRevenue
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: PlanRevenue
+
+	partition FactRevenuePlan = m
+		mode: import
+		source =
+				let
+					Source = Excel.Workbook(File.Contents(DataFolder & "pharma_project_finance.xlsx"), null, true),
+					Data = Source{[Item = "FactRevenuePlan", Kind = "Table"]}[Data],
+					Typed = Table.TransformColumnTypes(Data, {{"PeriodEnd", type date}, {"ProjectKey", Int64.Type}, {"CustomerKey", Int64.Type}, {"PlanType", type text}, {"PlanRevenue", type number}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

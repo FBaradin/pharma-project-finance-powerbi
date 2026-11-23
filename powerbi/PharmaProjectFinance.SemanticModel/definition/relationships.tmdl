@@ -1,0 +1,108 @@
+relationship f6ade882-38d0-5a89-bac6-a6098a365ada
+	fromColumn: FactCost.ProjectKey
+	toColumn: DimProject.ProjectKey
+
+relationship 3fefce90-3d13-5efe-8db4-aabd41298500
+	fromColumn: FactCost.CustomerKey
+	toColumn: DimCustomer.CustomerKey
+
+relationship 05cfbecf-1116-562c-b310-84720d0f5a32
+	fromColumn: FactCost.WBSKey
+	toColumn: DimWBS.WBSKey
+
+relationship ae8ada82-15ed-547c-90e8-16e604f5e4ae
+	fromColumn: FactCost.PostingDate
+	toColumn: DimDate.Date
+
+relationship fc098ae0-4648-5722-a8d0-dd7dd3bc6d2c
+	fromColumn: FactCostPlan.ProjectKey
+	toColumn: DimProject.ProjectKey
+
+relationship 2cb0448b-a0e4-5db3-9a4f-d157cec50829
+	fromColumn: FactCostPlan.CustomerKey
+	toColumn: DimCustomer.CustomerKey
+
+relationship ae3b857c-7a6f-52db-b1a7-9b252449c7fa
+	fromColumn: FactCostPlan.WBSKey
+	toColumn: DimWBS.WBSKey
+
+relationship fac029a9-5d00-590d-a700-5022ed35d4c9
+	fromColumn: FactCostPlan.PlanDate
+	toColumn: DimDate.Date
+
+relationship 43ca9a67-7c8b-5640-b718-211185654946
+	fromColumn: FactContractSnapshot.ProjectKey
+	toColumn: DimProject.ProjectKey
+
+relationship 18464f12-8aa0-50f5-a649-a0862467b13f
+	fromColumn: FactContractSnapshot.CustomerKey
+	toColumn: DimCustomer.CustomerKey
+
+relationship ed397c82-d721-50ef-9734-e5d8475a0cea
+	fromColumn: FactContractSnapshot.SnapshotDate
+	toColumn: DimDate.Date
+
+relationship 7ab5c1e7-2bee-526b-8450-4ae4fcfff3c3
+	fromColumn: FactBilling.ProjectKey
+	toColumn: DimProject.ProjectKey
+
+relationship de37c433-fc80-5032-a250-2475558d0896
+	fromColumn: FactBilling.CustomerKey
+	toColumn: DimCustomer.CustomerKey
+
+relationship bfcfe268-210f-513f-bd22-f45a69889a4f
+	fromColumn: FactBilling.InvoiceDate
+	toColumn: DimDate.Date
+
+relationship 1ca83131-54b9-5102-88fd-4cbc065c99fb
+	fromColumn: FactBatch.ProjectKey
+	toColumn: DimProject.ProjectKey
+
+relationship f879219b-f29d-53d8-9c66-cff67aa97cf3
+	fromColumn: FactBatch.CustomerKey
+	toColumn: DimCustomer.CustomerKey
+
+relationship ac735232-855f-5e8d-9029-5f37f747bdc0
+	fromColumn: FactBatch.ReleaseDate
+	toColumn: DimDate.Date
+
+relationship b06da482-1413-54e7-b5e1-9342f1ff7049
+	isActive: false
+	fromColumn: FactBatch.PlannedReleaseDate
+	toColumn: DimDate.Date
+
+relationship 74a170bb-7384-5500-82e9-eab33c46e5f1
+	fromColumn: FactLedger.ProjectKey
+	toColumn: DimProject.ProjectKey
+
+relationship 0568d993-bcf9-5281-a528-3a0c5dbdc2c2
+	fromColumn: FactLedger.CustomerKey
+	toColumn: DimCustomer.CustomerKey
+
+relationship bef38459-a613-59b6-bfcc-a576064ebef6
+	fromColumn: FactLedger.PeriodEnd
+	toColumn: DimDate.Date
+
+relationship 683248a8-2959-5e4c-af51-8b1a50a96e4b
+	fromColumn: FactRevenuePlan.ProjectKey
+	toColumn: DimProject.ProjectKey
+
+relationship 8ceb8599-3b4c-5fdf-8485-012892af2d66
+	fromColumn: FactRevenuePlan.CustomerKey
+	toColumn: DimCustomer.CustomerKey
+
+relationship 6de44f38-2ca0-594f-a4fa-5802e04d6261
+	fromColumn: FactRevenuePlan.PeriodEnd
+	toColumn: DimDate.Date
+
+relationship b222e0eb-424e-59eb-becf-1b0c9ca258ca
+	fromColumn: FactRiskOpp.ProjectKey
+	toColumn: DimProject.ProjectKey
+
+relationship 792177bf-7f3c-569f-a1cd-b58009616005
+	fromColumn: FactRiskOpp.CustomerKey
+	toColumn: DimCustomer.CustomerKey
+
+relationship 8ce741a4-435a-58e1-a7c4-19fa46be1331
+	fromColumn: FactRiskOpp.ExpectedDate
+	toColumn: DimDate.Date

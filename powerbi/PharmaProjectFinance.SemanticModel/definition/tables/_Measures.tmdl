@@ -1,0 +1,514 @@
+/// Home table for every explicit measure, organised in display folders that follow the report pages.
+table _Measures
+
+	/// Last closed month-end = latest period in the general-ledger extract. Everything after it is forecast.
+	measure 'Reporting Close Date' = CALCULATE ( MAX ( FactLedger[PeriodEnd] ), REMOVEFILTERS () )
+		formatString: dd mmm yyyy
+		displayFolder: 0 Helpers
+
+	/// The date every "to date" (balance) measure is evaluated at: end of the period in context, capped at the close date.
+	measure 'As-of Date' =
+			VAR _periodEnd = MAX ( DimDate[Date] )
+			VAR _close = [Reporting Close Date]
+			RETURN
+				IF ( NOT ISBLANK ( _periodEnd ), MIN ( _periodEnd, _close ) )
+		formatString: dd mmm yyyy
+		displayFolder: 0 Helpers
+
+	/// Header text, e.g. "Actuals to 31 Oct 2026 · USD · synthetic data".
+	measure 'Report Subtitle' = "Actuals to " & FORMAT ( [Reporting Close Date], "dd mmm yyyy" ) & "  ·  USD  ·  synthetic data"
+		displayFolder: 0 Helpers
+
+	/// Actual cost posted in the period in context.
+	measure 'Actual Cost' = SUM ( FactCost[ActualCost] )
+		formatString: \$#,0
+		displayFolder: 1 Revenue Recognition
+
+	/// Inception-to-date actual cost at the as-of date.
+	measure 'Cost to Date' =
+			VAR _asOf = [As-of Date]
+			RETURN
+				IF (
+					NOT ISBLANK ( _asOf ),
+					CALCULATE ( [Actual Cost], REMOVEFILTERS ( DimDate ), DimDate[Date] <= _asOf )
+				)
+		formatString: \$#,0
+		displayFolder: 1 Revenue Recognition
+
+	/// Contract value (original price + approved change orders) in the as-of month's controlling snapshot.
+	measure 'Transaction Price' =
+			VAR _asOf = [As-of Date]
+			RETURN
+				IF (
+					NOT ISBLANK ( _asOf ),
+					CALCULATE (
+						SUM ( FactContractSnapshot[TransactionPrice] ),
+						REMOVEFILTERS ( DimDate ),
+						DimDate[Date] = EOMONTH ( _asOf, 0 )
+					)
+				)
+		formatString: \$#,0
+		displayFolder: 1 Revenue Recognition
+
+	/// Estimate at completion (EAC): the latest forecast of the project's total cost, from the as-of month's snapshot.
+	measure 'Estimate at Completion (EAC)' =
+			VAR _asOf = [As-of Date]
+			RETURN
+				IF (
+					NOT ISBLANK ( _asOf ),
+					CALCULATE (
+						SUM ( FactContractSnapshot[EstimateAtCompletion] ),
+						REMOVEFILTERS ( DimDate ),
+						DimDate[Date] = EOMONTH ( _asOf, 0 )
+					)
+				)
+		formatString: \$#,0
+		displayFolder: 1 Revenue Recognition
+
+	/// Over-time revenue to date, cost-to-cost method, project by project:
+	/// transaction price x MIN ( 1, cost to date / EAC ).
+	measure 'Revenue to Date (Over Time)' =
+			VAR _asOf = [As-of Date]
+			RETURN
+				IF (
+					NOT ISBLANK ( _asOf ),
+					CALCULATE (
+						SUMX (
+							VALUES ( DimProject[ProjectKey] ),
+							VAR _price = [Transaction Price]
+							VAR _eac = [Estimate at Completion (EAC)]
+							VAR _costToDate = [Cost to Date]
+							RETURN
+								IF ( _eac > 0, _price * MIN ( 1, DIVIDE ( _costToDate, _eac ) ) )
+						),
+						DimProject[RevRecMethod] = "Over time",
+						REMOVEFILTERS ( DimWBS )
+					)
+				)
+		formatString: \$#,0
+		displayFolder: 1 Revenue Recognition
+
+	/// Point-in-time revenue to date: value of commercial batches released by QA up to the as-of date.
+	measure 'Revenue to Date (Point in Time)' =
+			VAR _asOf = [As-of Date]
+			RETURN
+				IF (
+					NOT ISBLANK ( _asOf ),
+					CALCULATE (
+						SUM ( FactBatch[BatchValue] ),
+						FactBatch[BatchStatus] = "Released",
+						DimProject[RevRecMethod] = "Point in time",
+						REMOVEFILTERS ( DimDate ),
+						DimDate[Date] <= _asOf
+					)
+				)
+		formatString: \$#,0
+		displayFolder: 1 Revenue Recognition
+
+	/// Total revenue earned since the start of the contract, at the as-of date.
+	measure 'Revenue to Date' = [Revenue to Date (Over Time)] + [Revenue to Date (Point in Time)]
+		formatString: \$#,0
+		displayFolder: 1 Revenue Recognition
+
+	/// Revenue to date on the day before the period in context starts.
+	measure 'Revenue to Date (Opening)' =
+			VAR _openingDate = MIN ( DimDate[Date] ) - 1
+			RETURN
+				CALCULATE ( [Revenue to Date], REMOVEFILTERS ( DimDate ), DimDate[Date] = _openingDate )
+		formatString: \$#,0
+		displayFolder: 1 Revenue Recognition
+
+	/// Revenue recognised in the period = revenue to date at the end - revenue to date at the start.
+	/// An EAC change therefore hits the month it happens in (cumulative catch-up).
+	measure 'Revenue Recognised' = [Revenue to Date] - [Revenue to Date (Opening)]
+		formatString: \$#,0
+		displayFolder: 1 Revenue Recognition
+
+	/// Cost-to-cost % complete of over-time projects (weighted by contract value when several are selected).
+	measure '% Complete' = DIVIDE ( [Revenue to Date (Over Time)], [Transaction Price] )
+		formatString: 0.0%
+		displayFolder: 1 Revenue Recognition
+
+	/// Revenue recognised minus actual cost in the period.
+	measure 'Gross Margin' = [Revenue Recognised] - [Actual Cost]
+		formatString: \$#,0
+		displayFolder: 1 Revenue Recognition
+
+	measure 'Gross Margin %' = DIVIDE ( [Gross Margin], [Revenue Recognised] )
+		formatString: 0.0%
+		displayFolder: 1 Revenue Recognition
+
+	/// Invoices issued in the period in context.
+	measure 'Invoiced Amount' = SUM ( FactBilling[InvoiceAmount] )
+		formatString: \$#,0
+		displayFolder: 2 WIP & Deferred
+
+	/// Inception-to-date invoicing at the as-of date.
+	measure 'Billed to Date' =
+			VAR _asOf = [As-of Date]
+			RETURN
+				IF (
+					NOT ISBLANK ( _asOf ),
+					CALCULATE ( [Invoiced Amount], REMOVEFILTERS ( DimDate ), DimDate[Date] <= _asOf )
+				)
+		formatString: \$#,0
+		displayFolder: 2 WIP & Deferred
+
+	/// Earned minus billed. Positive = contract asset (WIP, unbilled). Negative = contract liability (deferred revenue).
+	measure 'Net Contract Position' = [Revenue to Date] - [Billed to Date]
+		formatString: \$#,0;-\$#,0;\$0
+		displayFolder: 2 WIP & Deferred
+
+	/// Contract assets (WIP): sum of the projects whose position is POSITIVE. Never netted across contracts.
+	measure 'Contract Assets (WIP)' =
+			SUMX (
+				VALUES ( DimProject[ProjectKey] ),
+				VAR _net = [Net Contract Position]
+				RETURN
+					IF ( _net > 0, _net )
+			) + 0
+		formatString: \$#,0
+		displayFolder: 2 WIP & Deferred
+
+	/// Contract liabilities (deferred revenue): sum of the projects whose position is NEGATIVE, shown as a positive amount.
+	measure 'Contract Liabilities (Deferred)' =
+			SUMX (
+				VALUES ( DimProject[ProjectKey] ),
+				VAR _net = [Net Contract Position]
+				RETURN
+					IF ( _net < 0, - _net )
+			) + 0
+		formatString: \$#,0
+		displayFolder: 2 WIP & Deferred
+
+	/// Plain-language label for the position in context.
+	measure 'Balance Type' =
+			VAR _net = ROUND ( [Net Contract Position], 0 )
+			RETURN
+				SWITCH (
+					TRUE (),
+					ISBLANK ( _net ), BLANK (),
+					_net > 0, "Contract asset (WIP)",
+					_net < 0, "Contract liability (deferred)",
+					"Settled"
+				)
+		displayFolder: 2 WIP & Deferred
+
+	/// Whole months between the last invoice and the as-of date.
+	measure 'Months Since Last Invoice' =
+			VAR _asOf = [As-of Date]
+			VAR _lastInvoice =
+				CALCULATE ( MAX ( FactBilling[InvoiceDate] ), REMOVEFILTERS ( DimDate ), DimDate[Date] <= _asOf )
+			RETURN
+				IF ( NOT ISBLANK ( _lastInvoice ), DATEDIFF ( _lastInvoice, _asOf, MONTH ) )
+		formatString: 0
+		displayFolder: 2 WIP & Deferred
+
+	/// Warns when unbilled revenue has been building for 3+ months (late billing or over-stated progress).
+	measure 'WIP Ageing Flag' =
+			IF (
+				[Net Contract Position] > 0 && [Months Since Last Invoice] >= 3,
+				"⚠ Unbilled 3+ months",
+				"OK"
+			)
+		displayFolder: 2 WIP & Deferred
+
+	/// Contract asset minus contract liability booked in the general ledger at the as-of month-end.
+	measure 'GL Net Contract Balance' =
+			VAR _asOf = [As-of Date]
+			RETURN
+				IF (
+					NOT ISBLANK ( _asOf ),
+					CALCULATE (
+						SUM ( FactLedger[GLContractAsset] ) - SUM ( FactLedger[GLContractLiability] ),
+						REMOVEFILTERS ( DimDate ),
+						DimDate[Date] = EOMONTH ( _asOf, 0 )
+					)
+				)
+		formatString: \$#,0;-\$#,0;\$0
+		displayFolder: 2 WIP & Deferred
+
+	/// Model position minus GL balance. Should be zero.
+	measure 'Difference vs GL' = [Net Contract Position] - [GL Net Contract Balance]
+		formatString: \$#,0;-\$#,0;\$0
+		displayFolder: 2 WIP & Deferred
+
+	/// "✔ Matches GL" or "⚠ Investigate" (difference above 1 USD).
+	measure 'Recon Status' =
+			IF (
+				NOT ISBLANK ( [GL Net Contract Balance] ),
+				IF ( ABS ( [Difference vs GL] ) <= 1, "✔ Matches GL", "⚠ Investigate" )
+			)
+		displayFolder: 2 WIP & Deferred
+
+	/// Number of projects whose model position differs from the GL. Tested per project because offsetting errors cancel in totals.
+	measure 'Projects to Investigate' =
+			COUNTROWS ( FILTER ( VALUES ( DimProject[ProjectKey] ), ABS ( [Difference vs GL] ) > 1 ) ) + 0
+		formatString: 0
+		displayFolder: 2 WIP & Deferred
+
+	/// Budget at completion (BAC): time-phased budget in total, incl. change orders approved by the as-of date.
+	measure 'Budget at Completion (BAC)' =
+			VAR _asOf = [As-of Date]
+			RETURN
+				CALCULATE (
+					SUM ( FactCostPlan[PlannedCost] ),
+					REMOVEFILTERS ( DimDate ),
+					FactCostPlan[ApprovalDate] <= _asOf
+				)
+		formatString: \$#,0
+		displayFolder: 3 WBS & Project Control
+
+	/// Planned value (PV): budgeted cost of the work scheduled up to the as-of date.
+	measure 'Planned Value (PV)' =
+			VAR _asOf = [As-of Date]
+			RETURN
+				IF (
+					NOT ISBLANK ( _asOf ),
+					CALCULATE (
+						SUM ( FactCostPlan[PlannedCost] ),
+						REMOVEFILTERS ( DimDate ),
+						DimDate[Date] <= _asOf,
+						FactCostPlan[ApprovalDate] <= _asOf
+					)
+				)
+		formatString: \$#,0
+		displayFolder: 3 WBS & Project Control
+
+	/// Actual cost (AC) to date, the earned-value name for Cost to Date.
+	measure 'Actual Cost (AC)' = [Cost to Date]
+		formatString: \$#,0
+		displayFolder: 3 WBS & Project Control
+
+	/// Earned value (EV): budget of the work actually done = BAC x % complete (cost-to-cost), per over-time project.
+	measure 'Earned Value (EV)' =
+			CALCULATE (
+				SUMX (
+					VALUES ( DimProject[ProjectKey] ),
+					VAR _eac = [Estimate at Completion (EAC)]
+					RETURN
+						IF ( _eac > 0, [Budget at Completion (BAC)] * MIN ( 1, DIVIDE ( [Cost to Date], _eac ) ) )
+				),
+				DimProject[RevRecMethod] = "Over time",
+				REMOVEFILTERS ( DimWBS )
+			)
+		formatString: \$#,0
+		displayFolder: 3 WBS & Project Control
+
+	/// Cost performance index = EV / AC. Below 1 = each dollar spent delivers less than a dollar of planned work (over budget).
+	measure 'CPI' =
+			DIVIDE (
+				[Earned Value (EV)],
+				CALCULATE ( [Cost to Date], DimProject[RevRecMethod] = "Over time", REMOVEFILTERS ( DimWBS ) )
+			)
+		formatString: 0.00
+		displayFolder: 3 WBS & Project Control
+
+	/// Schedule performance index = EV / PV. Below 1 = behind schedule.
+	measure 'SPI' =
+			DIVIDE (
+				[Earned Value (EV)],
+				CALCULATE ( [Planned Value (PV)], DimProject[RevRecMethod] = "Over time", REMOVEFILTERS ( DimWBS ) )
+			)
+		formatString: 0.00
+		displayFolder: 3 WBS & Project Control
+
+	/// Forecast over/underrun at completion: BAC - EAC (negative = overrun).
+	measure 'Variance at Completion (VAC)' =
+			VAR _eac = [Estimate at Completion (EAC)]
+			RETURN
+				IF ( NOT ISBLANK ( _eac ), CALCULATE ( [Budget at Completion (BAC)], REMOVEFILTERS ( DimWBS ) ) - _eac )
+		formatString: \$#,0;-\$#,0;\$0
+		displayFolder: 3 WBS & Project Control
+
+	/// Budget not yet spent: BAC - actual cost to date.
+	measure 'Budget Remaining' = [Budget at Completion (BAC)] - [Cost to Date]
+		formatString: \$#,0;-\$#,0;\$0
+		displayFolder: 3 WBS & Project Control
+
+	/// Planned to date minus actual to date (negative = spending more than planned so far).
+	measure 'Cost Variance to Plan' = [Planned Value (PV)] - [Cost to Date]
+		formatString: \$#,0;-\$#,0;\$0
+		displayFolder: 3 WBS & Project Control
+
+	measure 'Revenue Budget' = CALCULATE ( SUM ( FactRevenuePlan[PlanRevenue] ), FactRevenuePlan[PlanType] = "Budget" )
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	/// Forecast for the open months, flexed by the Forecast Adjustment what-if parameter.
+	measure 'Revenue Forecast' =
+			CALCULATE ( SUM ( FactRevenuePlan[PlanRevenue] ), FactRevenuePlan[PlanType] = "Forecast" )
+				* ( 1 + [Forecast Adjustment Value] )
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	/// Actual revenue for closed months + forecast for open months.
+	measure 'Revenue Actual + Forecast' = [Revenue Recognised] + [Revenue Forecast]
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	/// Full-year revenue target of the reporting year.
+	measure 'FY Budget' =
+			VAR _fy = YEAR ( [Reporting Close Date] )
+			RETURN
+				CALCULATE ( [Revenue Budget], REMOVEFILTERS ( DimDate ), DimDate[Year] = _fy )
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	/// Revenue actually recognised from 1 January to the close date.
+	measure 'FY Actual to Date' =
+			VAR _fy = YEAR ( [Reporting Close Date] )
+			RETURN
+				CALCULATE ( [Revenue Recognised], REMOVEFILTERS ( DimDate ), DimDate[Year] = _fy )
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	/// Forecast revenue for the remaining (open) months of the year.
+	measure 'FY Remaining Forecast' =
+			VAR _fy = YEAR ( [Reporting Close Date] )
+			RETURN
+				CALCULATE ( [Revenue Forecast], REMOVEFILTERS ( DimDate ), DimDate[Year] = _fy )
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	/// Base outlook = actual to date + remaining forecast.
+	measure 'FY Base Outlook' = [FY Actual to Date] + [FY Remaining Forecast]
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	measure 'FY Risks' = CALCULATE ( SUM ( FactRiskOpp[RevenueImpact] ), FactRiskOpp[ItemType] = "Risk", REMOVEFILTERS ( DimDate ) )
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	measure 'FY Opportunities' = CALCULATE ( SUM ( FactRiskOpp[RevenueImpact] ), FactRiskOpp[ItemType] = "Opportunity", REMOVEFILTERS ( DimDate ) )
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	/// Expected value of risks: impact x probability, item by item.
+	measure 'FY Risks (Weighted)' =
+			CALCULATE (
+				SUMX ( FactRiskOpp, FactRiskOpp[RevenueImpact] * FactRiskOpp[Probability] ),
+				FactRiskOpp[ItemType] = "Risk",
+				REMOVEFILTERS ( DimDate )
+			)
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	measure 'FY Opportunities (Weighted)' =
+			CALCULATE (
+				SUMX ( FactRiskOpp, FactRiskOpp[RevenueImpact] * FactRiskOpp[Probability] ),
+				FactRiskOpp[ItemType] = "Opportunity",
+				REMOVEFILTERS ( DimDate )
+			)
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	/// Full-year revenue for the scenario in context (slicer or chart axis). Defaults to Base.
+	measure 'Scenario Outlook' =
+			VAR _base = [FY Base Outlook]
+			RETURN
+				SWITCH (
+					SELECTEDVALUE ( DimScenario[Scenario], "Base" ),
+					"Downside", _base - [FY Risks],
+					"Risk-weighted", _base - [FY Risks (Weighted)] + [FY Opportunities (Weighted)],
+					"Base", _base,
+					"Upside", _base + [FY Opportunities]
+				)
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	/// Scenario outlook minus full-year budget (negative = below target).
+	measure 'Gap to Budget' = [Scenario Outlook] - [FY Budget]
+		formatString: +\$#,0;-\$#,0;\$0
+		displayFolder: 4 Outlook Scenarios
+
+	measure 'R&O Impact' = SUM ( FactRiskOpp[RevenueImpact] )
+		formatString: \$#,0
+		displayFolder: 4 Outlook Scenarios
+
+	measure 'R&O Probability' = AVERAGE ( FactRiskOpp[Probability] )
+		formatString: 0%
+		displayFolder: 4 Outlook Scenarios
+
+	/// Impact x probability, signed: opportunities +, risks -.
+	measure 'R&O Weighted Impact' =
+			SUMX (
+				FactRiskOpp,
+				FactRiskOpp[RevenueImpact] * FactRiskOpp[Probability]
+					* IF ( FactRiskOpp[ItemType] = "Risk", -1, 1 )
+			)
+		formatString: +\$#,0;-\$#,0;\$0
+		displayFolder: 4 Outlook Scenarios
+
+	/// Number of batches, dated by PLANNED release (inactive relationship activated with USERELATIONSHIP).
+	measure 'Batches' =
+			CALCULATE ( COUNTROWS ( FactBatch ), USERELATIONSHIP ( FactBatch[PlannedReleaseDate], DimDate[Date] ) )
+		formatString: 0
+		displayFolder: 5 GMP Batches
+
+	measure 'Batches Released' = CALCULATE ( [Batches], FactBatch[BatchStatus] = "Released" ) + 0
+		formatString: 0
+		displayFolder: 5 GMP Batches
+
+	measure 'Batches Failed' = CALCULATE ( [Batches], FactBatch[BatchStatus] = "Failed" ) + 0
+		formatString: 0
+		displayFolder: 5 GMP Batches
+
+	/// Released / (released + failed): only batches with a final QA decision count.
+	measure 'Batch Success Rate' = DIVIDE ( [Batches Released], [Batches Released] + [Batches Failed] )
+		formatString: 0.0%
+		displayFolder: 5 GMP Batches
+
+	/// Released with zero deviations / (released + failed).
+	measure 'Right First Time %' =
+			DIVIDE (
+				CALCULATE ( SUM ( FactBatch[RightFirstTime] ), USERELATIONSHIP ( FactBatch[PlannedReleaseDate], DimDate[Date] ) ),
+				[Batches Released] + [Batches Failed]
+			)
+		formatString: 0.0%
+		displayFolder: 5 GMP Batches
+
+	/// Commercial revenue waiting for QA release: no release, no revenue.
+	measure 'Revenue Awaiting QA Release' =
+			CALCULATE ( SUM ( FactBatch[BatchValue] ), FactBatch[BatchStatus] = "Under QA review", REMOVEFILTERS ( DimDate ) ) + 0
+		formatString: \$#,0
+		displayFolder: 5 GMP Batches
+
+	/// Value of failed batches: no revenue, and their cost is absorbed.
+	measure 'Revenue Lost (Failed Batches)' =
+			CALCULATE ( SUM ( FactBatch[BatchValue] ), FactBatch[BatchStatus] = "Failed", REMOVEFILTERS ( DimDate ) ) + 0
+		formatString: \$#,0
+		displayFolder: 5 GMP Batches
+
+	/// Batch value (commercial batches only).
+	measure 'Batch Value' =
+			CALCULATE ( SUM ( FactBatch[BatchValue] ), USERELATIONSHIP ( FactBatch[PlannedReleaseDate], DimDate[Date] ) )
+		formatString: \$#,0
+		displayFolder: 5 GMP Batches
+
+	/// Revenue recognised for the batch: its value if QA released it, otherwise zero.
+	measure 'Batch Revenue Recognised' =
+			CALCULATE (
+				SUM ( FactBatch[BatchValue] ),
+				FactBatch[BatchStatus] = "Released",
+				USERELATIONSHIP ( FactBatch[PlannedReleaseDate], DimDate[Date] )
+			)
+		formatString: \$#,0
+		displayFolder: 5 GMP Batches
+
+	measure 'Deviations' =
+			CALCULATE ( SUM ( FactBatch[DeviationCount] ), USERELATIONSHIP ( FactBatch[PlannedReleaseDate], DimDate[Date] ) )
+		formatString: 0
+		displayFolder: 5 GMP Batches
+
+	column Placeholder
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: Placeholder
+
+	partition _Measures = m
+		mode: import
+		source = #table(type table [Placeholder = text], {})
+
+	annotation PBI_ResultType = Table

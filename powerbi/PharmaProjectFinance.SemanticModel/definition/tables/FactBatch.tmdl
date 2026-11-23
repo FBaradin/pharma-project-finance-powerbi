@@ -1,0 +1,82 @@
+/// GMP batches and QA status. Release of a commercial batch transfers control and triggers point-in-time revenue.
+table FactBatch
+
+	column BatchID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: BatchID
+
+	column ProjectKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: ProjectKey
+
+	column CustomerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+	column BatchType
+		dataType: string
+		summarizeBy: none
+		sourceColumn: BatchType
+
+	column ManufactureStartDate
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: ManufactureStartDate
+
+	column PlannedReleaseDate
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: PlannedReleaseDate
+
+	column ReleaseDate
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: ReleaseDate
+
+	column BatchStatus
+		dataType: string
+		summarizeBy: none
+		sourceColumn: BatchStatus
+
+	column BatchValue
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: BatchValue
+
+	column DeviationCount
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: DeviationCount
+
+	column RightFirstTime
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: RightFirstTime
+
+	partition FactBatch = m
+		mode: import
+		source =
+				let
+					Source = Excel.Workbook(File.Contents(DataFolder & "pharma_project_finance.xlsx"), null, true),
+					Data = Source{[Item = "FactBatch", Kind = "Table"]}[Data],
+					Typed = Table.TransformColumnTypes(Data, {{"BatchID", type text}, {"ProjectKey", Int64.Type}, {"CustomerKey", Int64.Type}, {"BatchType", type text}, {"ManufactureStartDate", type date}, {"PlannedReleaseDate", type date}, {"ReleaseDate", type date}, {"BatchStatus", type text}, {"BatchValue", type number}, {"DeviationCount", Int64.Type}, {"RightFirstTime", Int64.Type}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,56 @@
+/// Customer invoices.
+table FactBilling
+
+	column InvoiceID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: InvoiceID
+
+	column InvoiceDate
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: InvoiceDate
+
+	column ProjectKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: ProjectKey
+
+	column CustomerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+	column BillingMilestone
+		dataType: string
+		summarizeBy: none
+		sourceColumn: BillingMilestone
+
+	column MilestoneType
+		dataType: string
+		summarizeBy: none
+		sourceColumn: MilestoneType
+
+	column InvoiceAmount
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: InvoiceAmount
+
+	partition FactBilling = m
+		mode: import
+		source =
+				let
+					Source = Excel.Workbook(File.Contents(DataFolder & "pharma_project_finance.xlsx"), null, true),
+					Data = Source{[Item = "FactBilling", Kind = "Table"]}[Data],
+					Typed = Table.TransformColumnTypes(Data, {{"InvoiceID", type text}, {"InvoiceDate", type date}, {"ProjectKey", Int64.Type}, {"CustomerKey", Int64.Type}, {"BillingMilestone", type text}, {"MilestoneType", type text}, {"InvoiceAmount", type number}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

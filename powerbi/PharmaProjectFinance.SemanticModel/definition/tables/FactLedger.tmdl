@@ -1,0 +1,56 @@
+/// General-ledger extract by month-end: booked revenue and contract asset / liability balances.
+table FactLedger
+
+	column PeriodEnd
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: PeriodEnd
+
+	column ProjectKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: ProjectKey
+
+	column CustomerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+	column BookedRevenue
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: BookedRevenue
+
+	column GLContractAsset
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: GLContractAsset
+
+	column GLContractLiability
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		summarizeBy: none
+		sourceColumn: GLContractLiability
+
+	partition FactLedger = m
+		mode: import
+		source =
+				let
+					Source = Excel.Workbook(File.Contents(DataFolder & "pharma_project_finance.xlsx"), null, true),
+					Data = Source{[Item = "FactLedger", Kind = "Table"]}[Data],
+					Typed = Table.TransformColumnTypes(Data, {{"PeriodEnd", type date}, {"ProjectKey", Int64.Type}, {"CustomerKey", Int64.Type}, {"BookedRevenue", type number}, {"GLContractAsset", type number}, {"GLContractLiability", type number}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "name": "p4_outlook",
+  "displayName": "4 Outlook Scenarios",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "visualInteractions": [
+    {
+      "source": "p4_slc_scn",
+      "target": "p4_range",
+      "type": "NoFilter"
+    }
+  ]
+}

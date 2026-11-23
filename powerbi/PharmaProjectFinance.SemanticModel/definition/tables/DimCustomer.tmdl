@@ -1,0 +1,31 @@
+/// Customers (anonymised).
+table DimCustomer
+
+	column CustomerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+	column Customer
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Customer
+
+	column CustomerSegment
+		dataType: string
+		summarizeBy: none
+		sourceColumn: CustomerSegment
+
+	partition DimCustomer = m
+		mode: import
+		source =
+				let
+					Source = Excel.Workbook(File.Contents(DataFolder & "pharma_project_finance.xlsx"), null, true),
+					Data = Source{[Item = "DimCustomer", Kind = "Table"]}[Data],
+					Typed = Table.TransformColumnTypes(Data, {{"CustomerKey", Int64.Type}, {"Customer", type text}, {"CustomerSegment", type text}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

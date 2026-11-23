@@ -1,0 +1,74 @@
+/// Work breakdown structure: project > phase > work package, including the change-order element.
+table DimWBS
+
+	column WBSKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: WBSKey
+
+	column ProjectKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: ProjectKey
+
+	column ProjectID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ProjectID
+
+	column WBSCode
+		dataType: string
+		summarizeBy: none
+		sourceColumn: WBSCode
+
+	column Phase
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Phase
+
+	column WorkPackage
+		dataType: string
+		summarizeBy: none
+		sourceColumn: WorkPackage
+
+	column IsChangeOrder
+		dataType: string
+		summarizeBy: none
+		sourceColumn: IsChangeOrder
+
+	column ChangeOrderID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ChangeOrderID
+
+	column ChangeOrderStatus
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ChangeOrderStatus
+
+	hierarchy 'WBS Hierarchy'
+
+		level Project
+			column: ProjectID
+
+		level Phase
+			column: Phase
+
+		level 'Work Package'
+			column: WorkPackage
+
+	partition DimWBS = m
+		mode: import
+		source =
+				let
+					Source = Excel.Workbook(File.Contents(DataFolder & "pharma_project_finance.xlsx"), null, true),
+					Data = Source{[Item = "DimWBS", Kind = "Table"]}[Data],
+					Typed = Table.TransformColumnTypes(Data, {{"WBSKey", Int64.Type}, {"ProjectKey", Int64.Type}, {"ProjectID", type text}, {"WBSCode", type text}, {"Phase", type text}, {"WorkPackage", type text}, {"IsChangeOrder", type text}, {"ChangeOrderID", type text}, {"ChangeOrderStatus", type text}})
+				in
+					Typed
+
+	annotation PBI_ResultType = Table

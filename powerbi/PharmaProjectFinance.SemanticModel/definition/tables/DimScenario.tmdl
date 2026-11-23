@@ -1,0 +1,38 @@
+/// Disconnected scenario table for the FY outlook (read by the Scenario Outlook measure with SELECTEDVALUE).
+table DimScenario
+
+	column Scenario
+		dataType: string
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Scenario]
+		sortByColumn: 'Scenario Order'
+
+	column 'Scenario Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Scenario Order]
+
+	column 'Scenario Description'
+		dataType: string
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Scenario Description]
+
+	partition DimScenario = calculated
+		mode: import
+		source =
+				DATATABLE (
+					"Scenario", STRING,
+					"Scenario Order", INTEGER,
+					"Scenario Description", STRING,
+					{
+						{ "Downside", 1, "Base outlook minus every open risk" },
+						{ "Risk-weighted", 2, "Base outlook plus probability-weighted opportunities minus probability-weighted risks" },
+						{ "Base", 3, "Actuals to the close date plus the base forecast for the open months" },
+						{ "Upside", 4, "Base outlook plus every open opportunity" }
+					}
+				)

@@ -1,0 +1,297 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p5_table",
+  "position": {
+    "x": 16,
+    "y": 454,
+    "z": 1000,
+    "width": 928,
+    "height": 252,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBatch"
+                    }
+                  },
+                  "Property": "BatchID"
+                }
+              },
+              "queryRef": "FactBatch.BatchID",
+              "nativeQueryRef": "BatchID",
+              "displayName": "Batch"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimProject"
+                    }
+                  },
+                  "Property": "ProjectID"
+                }
+              },
+              "queryRef": "DimProject.ProjectID",
+              "nativeQueryRef": "ProjectID",
+              "displayName": "Project"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBatch"
+                    }
+                  },
+                  "Property": "BatchType"
+                }
+              },
+              "queryRef": "FactBatch.BatchType",
+              "nativeQueryRef": "BatchType",
+              "displayName": "Type"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBatch"
+                    }
+                  },
+                  "Property": "BatchStatus"
+                }
+              },
+              "queryRef": "FactBatch.BatchStatus",
+              "nativeQueryRef": "BatchStatus",
+              "displayName": "QA status"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBatch"
+                    }
+                  },
+                  "Property": "PlannedReleaseDate"
+                }
+              },
+              "queryRef": "FactBatch.PlannedReleaseDate",
+              "nativeQueryRef": "PlannedReleaseDate",
+              "displayName": "Planned release"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBatch"
+                    }
+                  },
+                  "Property": "ReleaseDate"
+                }
+              },
+              "queryRef": "FactBatch.ReleaseDate",
+              "nativeQueryRef": "ReleaseDate",
+              "displayName": "Released on"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Deviations"
+                }
+              },
+              "queryRef": "_Measures.Deviations",
+              "nativeQueryRef": "Deviations"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Batch Value"
+                }
+              },
+              "queryRef": "_Measures.Batch Value",
+              "nativeQueryRef": "Batch Value",
+              "displayName": "Batch value"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Batch Revenue Recognised"
+                }
+              },
+              "queryRef": "_Measures.Batch Revenue Recognised",
+              "nativeQueryRef": "Batch Revenue Recognised",
+              "displayName": "Revenue recognised"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "FactBatch"
+                  }
+                },
+                "Property": "BatchID"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": false
+      }
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E3E8EF'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Batch register'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1F3A5F'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

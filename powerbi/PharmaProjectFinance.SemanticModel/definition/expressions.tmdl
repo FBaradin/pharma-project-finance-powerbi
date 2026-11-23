@@ -1,0 +1,4 @@
+/// Folder that contains pharma_project_finance.xlsx (must end with a backslash). Change it after cloning the repository.
+expression DataFolder = "C:\Users\User\Projects\pharma-project-finance-powerbi\data\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+
+	annotation PBI_ResultType = Text
